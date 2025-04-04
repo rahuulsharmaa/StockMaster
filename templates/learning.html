@@ -1,0 +1,681 @@
+{% extends "base.html" %}
+{% block title %}StockMaster - Learning Center{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script>
+    // Wait for Tailwind to be available since it's initialized in base.html
+    document.addEventListener('DOMContentLoaded', function () {
+        // Custom accordion implementation
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const targetContent = document.querySelector(targetId);
+
+                if (targetContent.classList.contains('hidden')) {
+                    // Open accordion
+                    targetContent.classList.remove('hidden');
+                    this.classList.remove('collapsed');
+                    this.setAttribute('aria-expanded', 'true');
+                    // Change icon from + to -
+                    const icon = this.querySelector('.accordion-icon');
+                    if (icon) {
+                        icon.classList.remove('fa-plus');
+                        icon.classList.add('fa-minus');
+                    }
+                } else {
+                    // Close accordion
+                    targetContent.classList.add('hidden');
+                    this.classList.add('collapsed');
+                    this.setAttribute('aria-expanded', 'false');
+                    // Change icon from - to +
+                    const icon = this.querySelector('.accordion-icon');
+                    if (icon) {
+                        icon.classList.add('fa-plus');
+                        icon.classList.remove('fa-minus');
+                    }
+                }
+            });
+        });
+    });
+</script>
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Add this if you need to customize the sidebar beyond Tailwind defaults */
+    #sidebar {
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        margin-top: 5px;
+    }
+    
+    /* Match dashboard active link color if needed */
+    .text-blue-600 {
+        color: #2563eb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row">
+    <!-- Sidebar -->
+<!-- Sidebar -->
+<nav id="sidebar"
+     class="bg-light md:fixed md:top-14 md:bottom-14 md:left-0 md:w-64 md:overflow-y-auto z-100 shadow-inner">
+    <div class="sticky top-0 pt-3">
+        <ul class="flex flex-col space-y-0">
+            <li class="nav-item">
+                <a href="/dashboard"
+                   class="flex items-center py-2 px-4 font-medium text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-chart-line mr-3"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/learning" 
+                   class="flex items-center py-2 px-4 font-medium text-blue-600">
+                    <i class="fas fa-book mr-3"></i> Learning Center
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/profile"
+                   class="flex items-center py-2 px-4 font-medium text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-user mr-3"></i> Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/logout?logged_out=true"
+                   class="flex items-center py-2 px-4 font-medium text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+    <!-- Main Content -->
+    <main class="w-full md:ml-64 px-4 md:px-8 py-4 md:py-6">
+        <div class="flex justify-between items-center border-b border-gray-200 pb-3 mb-6">
+            <h1 class="text-2xl font-semibold">Stock Market Learning Center</h1>
+            <div class="relative">
+                <input type="text"
+                    class="pl-3 pr-10 py-2 rounded-full border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    placeholder="Search topics...">
+                <button class="absolute right-3 top-2.5 text-gray-500">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Intro Banner -->
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 mb-8 border-l-4 border-blue-600">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-graduation-cap text-3xl mr-3 text-blue-600"></i>
+                <h3 class="text-xl font-semibold">Welcome to the StockMaster Learning Center</h3>
+            </div>
+            <p class="text-lg mb-2">Before you start trading or investing, it's crucial to build a solid foundation of
+                knowledge. This learning center provides essential information to help you understand the stock market
+                and make informed decisions.</p>
+            <p>Browse through the topics below to learn about different aspects of investing and trading.</p>
+        </div>
+
+       <!-- Topic 1: Stock Market Basics -->
+<div class="mb-10">
+    <h4 class="relative pl-4 mb-5 font-semibold text-gray-800 before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-blue-600 before:rounded">
+        1. Stock Market Basics
+    </h4>
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <h5 class="flex items-center font-semibold text-blue-900 mb-3">
+                        <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                        What is the Stock Market?
+                    </h5>
+                    <p class="mb-4">The stock market is a place where buyers and sellers trade shares of
+                        publicly listed companies. It serves as a platform for companies to raise capital and
+                        for investors to own a piece of businesses.</p>
+
+                    <div class="space-y-2">
+                        <!-- Accordion Item 1 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseOne" aria-expanded="false">
+                                What are stocks?
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseOne" class="hidden bg-white p-4">
+                                <p>Stocks represent ownership shares in a company. When you buy a stock, you
+                                    become a shareholder, owning a small piece of that company. As the company
+                                    grows and becomes more valuable, the value of your shares may increase.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 2 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseTwo" aria-expanded="false">
+                                How do stock exchanges work?
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseTwo" class="hidden bg-white p-4">
+                                <p>Stock exchanges are organized marketplaces where stocks are bought and sold.
+                                    Major exchanges include the New York Stock Exchange (NYSE) and NASDAQ. They
+                                    provide rules and regulations to ensure fair trading and publish real-time
+                                    price information.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 3 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseThree" aria-expanded="false">
+                                What are market indices?
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseThree" class="hidden bg-white p-4">
+                                <p>Market indices like the S&P 500, Dow Jones, and NASDAQ Composite measure the
+                                    performance of a group of stocks. They provide a snapshot of the overall
+                                    market or a specific sector's performance and serve as benchmarks for
+                                    investors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="rounded-lg overflow-hidden shadow-sm h-full">
+                        <iframe src="https://www.youtube.com/embed/Xn7KWR9EOGQ" title="Stock Market Basics"
+                            class="w-full h-full" style="min-height: 100%;" allowfullscreen></iframe>
+                    </div>
+                    <p class="mt-3 text-center text-gray-500 text-sm">Video: Understanding the Stock Market for
+                        Beginners</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Topic 2: Investment Fundamentals -->
+<div class="mb-10">
+    <h4 class="relative pl-4 mb-5 font-semibold text-gray-800 before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-blue-600 before:rounded">
+        2. Investment Fundamentals
+    </h4>
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <h5 class="flex items-center font-semibold text-blue-900 mb-3">
+                        <i class="fas fa-balance-scale mr-2 text-blue-600"></i>
+                        Fundamental Analysis
+                    </h5>
+                    <p class="mb-4">Fundamental analysis evaluates a company's financial health, management,
+                        competitive advantages, and growth prospects to determine its intrinsic value. This
+                        helps investors make informed decisions about whether a stock is overvalued or
+                        undervalued.</p>
+
+                    <div class="space-y-2">
+                        <!-- Accordion Item 4 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseFour" aria-expanded="false">
+                                Financial Statements
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseFour" class="hidden bg-white p-4">
+                                <p>The three main financial statements are the balance sheet, income statement,
+                                    and cash flow statement. They provide insights into a company's assets,
+                                    liabilities, revenue, expenses, and cash management.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 5 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseFive" aria-expanded="false">
+                                Key Financial Ratios
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseFive" class="hidden bg-white p-4">
+                                <ul class="space-y-1">
+                                    <li><strong>P/E Ratio (Price-to-Earnings)</strong>: Compares a company's
+                                        share price to its earnings per share.</li>
+                                    <li><strong>EPS (Earnings Per Share)</strong>: A company's profit divided by
+                                        its outstanding shares.</li>
+                                    <li><strong>ROE (Return on Equity)</strong>: Measures a company's
+                                        profitability relative to shareholders' equity.</li>
+                                    <li><strong>Debt-to-Equity Ratio</strong>: Assesses a company's financial
+                                        leverage.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="rounded-lg overflow-hidden shadow-sm h-full">
+                        <iframe src="https://www.youtube.com/embed/fGVtypWv04Y" title="Fundamental Analysis"
+                            class="w-full h-full" style="min-height: 100%;" allowfullscreen></iframe>
+                    </div>
+                    <p class="mt-3 text-center text-gray-500 text-sm">Video: Introduction to Fundamental
+                        Analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Topic 3: Technical Analysis -->
+<div class="mb-10">
+    <h4 class="relative pl-4 mb-5 font-semibold text-gray-800 before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-blue-600 before:rounded">
+        3. Technical Analysis
+    </h4>
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <h5 class="flex items-center font-semibold text-blue-900 mb-3">
+                        <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
+                        Chart Patterns & Indicators
+                    </h5>
+                    <p class="mb-4">Technical analysis uses price charts and statistical indicators to identify
+                        patterns and trends that may predict future price movements. This approach focuses on
+                        market psychology and historical price data.</p>
+
+                    <div class="space-y-2">
+                        <!-- Accordion Item 6 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseSix" aria-expanded="false">
+                                Common Chart Patterns
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseSix" class="hidden bg-white p-4">
+                                <ul class="space-y-1">
+                                    <li><strong>Head and Shoulders</strong>: A reversal pattern indicating a
+                                        trend change.</li>
+                                    <li><strong>Double Top/Bottom</strong>: Signals potential reversal points.
+                                    </li>
+                                    <li><strong>Triangle Patterns</strong>: Indicates continuation or reversal
+                                        based on breakout direction.</li>
+                                    <li><strong>Cup and Handle</strong>: A bullish continuation pattern.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 7 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseSeven" aria-expanded="false">
+                                Technical Indicators
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseSeven" class="hidden bg-white p-4">
+                                <ul class="space-y-1">
+                                    <li><strong>Moving Averages</strong>: Smooths price data to identify trends.
+                                    </li>
+                                    <li><strong>RSI (Relative Strength Index)</strong>: Measures overbought or
+                                        oversold conditions.</li>
+                                    <li><strong>MACD (Moving Average Convergence Divergence)</strong>: Shows
+                                        relationship between two moving averages.</li>
+                                    <li><strong>Bollinger Bands</strong>: Indicates volatility and potential
+                                        price targets.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="rounded-lg overflow-hidden shadow-sm h-full">
+                        <iframe src="https://www.youtube.com/embed/08R_TJhAOGo" title="Technical Analysis"
+                            class="w-full h-full" style="min-height: 100%;" allowfullscreen></iframe>
+                    </div>
+                    <p class="mt-3 text-center text-gray-500 text-sm">Video: Technical Analysis Basics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Topic 4: Risk Management -->
+<div class="mb-10">
+    <h4 class="relative pl-4 mb-5 font-semibold text-gray-800 before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-blue-600 before:rounded">
+        4. Risk Management
+    </h4>
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <h5 class="flex items-center font-semibold text-blue-900 mb-3">
+                        <i class="fas fa-shield-alt mr-2 text-blue-600"></i>
+                        Protecting Your Investment
+                    </h5>
+                    <p class="mb-4">Risk management is crucial for long-term investment success. It involves
+                        strategies to minimize potential losses while maximizing potential gains.</p>
+
+                    <div class="space-y-2">
+                        <!-- Accordion Item 8 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseEight" aria-expanded="false">
+                                Diversification
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseEight" class="hidden bg-white p-4">
+                                <p>Diversification involves spreading investments across different asset
+                                    classes, sectors, and geographical regions. This helps reduce the impact of
+                                    poor performance in any single investment on your overall portfolio.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 9 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseNine" aria-expanded="false">
+                                Position Sizing
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseNine" class="hidden bg-white p-4">
+                                <p>Position sizing determines how much of your capital to allocate to each
+                                    investment. A common rule is to limit any single position to 1-5% of your
+                                    total portfolio value to manage risk.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 10 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseTen" aria-expanded="false">
+                                Stop-Loss Orders
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseTen" class="hidden bg-white p-4">
+                                <p>A stop-loss order automatically sells a stock when it falls to a
+                                    predetermined price, limiting potential losses. This helps remove emotion
+                                    from the decision-making process and protects your capital.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="rounded-lg overflow-hidden shadow-sm h-full">
+                        <iframe src="https://www.youtube.com/embed/mHhBL9anNNY?si=FFVuBJiTF1VNaaKU"  title="Risk Management"
+                            class="w-full h-full" style="min-height: 100%;" allowfullscreen></iframe>
+                    </div>
+                    <p class="mt-3 text-center text-gray-500 text-sm">Video: Risk Management Strategies for
+                        Investors</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Topic 5: Investment Strategies -->
+<div class="mb-10">
+    <h4 class="relative pl-4 mb-5 font-semibold text-gray-800 before:content-[''] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-blue-600 before:rounded">
+        5. Investment Strategies
+    </h4>
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <h5 class="flex items-center font-semibold text-blue-900 mb-3">
+                        <i class="fas fa-chess mr-2 text-blue-600"></i>
+                        Common Investment Approaches
+                    </h5>
+                    <p class="mb-4">Different investment strategies suit different goals, risk tolerances, and
+                        time horizons. Understanding these approaches can help you develop a strategy that
+                        aligns with your personal financial objectives.</p>
+
+                    <div class="space-y-2">
+                        <!-- Accordion Item 11 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseEleven" aria-expanded="false">
+                                Value Investing
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseEleven" class="hidden bg-white p-4">
+                                <p>Value investing focuses on buying stocks that appear undervalued compared to
+                                    their intrinsic value. Value investors look for companies trading below
+                                    their worth, often using metrics like P/E ratio, P/B ratio, and dividend
+                                    yield.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 12 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseTwelve" aria-expanded="false">
+                                Growth Investing
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseTwelve" class="hidden bg-white p-4">
+                                <p>Growth investing targets companies with high growth potential, often in
+                                    emerging industries or with innovative products. These stocks may have
+                                    higher P/E ratios but demonstrate strong revenue and earnings growth.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 13 -->
+                        <div class="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                                class="accordion-button flex justify-between items-center w-full p-4 text-left bg-gray-50 hover:bg-gray-100 font-medium text-gray-700"
+                                data-target="#collapseThirteen" aria-expanded="false">
+                                Index Investing
+                                <i class="accordion-icon fas fa-plus text-gray-400 text-sm"></i>
+                            </button>
+                            <div id="collapseThirteen" class="hidden bg-white p-4">
+                                <p>Index investing involves buying a basket of stocks that mirror a market
+                                    index, such as the S&P 500. This passive approach aims to match market
+                                    returns with lower fees and reduced risk compared to picking individual
+                                    stocks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex flex-col">
+                    <div class="rounded-lg overflow-hidden shadow-sm h-full">
+                        <iframe src="https://www.youtube.com/embed/dFAiChOmoGI" title="Investment Strategies"
+                            class="w-full h-full" style="min-height: 100%;" allowfullscreen></iframe>
+                    </div>
+                    <p class="mt-3 text-center text-gray-500 text-sm">Video: Common Investment Strategies
+                        Explained</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Recommended Resources - Enhanced styling -->
+        <div class="mb-4">
+            <div class="w-full">
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="flex items-center p-4 border-b">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
+                        </svg>
+                        <h5 class="text-lg font-semibold m-0">Additional Resources</h5>
+                    </div>
+                    <div class="p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h6 class="text-blue-600 font-medium mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z">
+                                        </path>
+                                    </svg>
+                                    Books for Beginners
+                                </h6>
+                                <ul class="divide-y divide-gray-200 border rounded-lg">
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z">
+                                            </path>
+                                        </svg>
+                                        <span>"The Intelligent Investor" by Benjamin Graham</span>
+                                    </li>
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z">
+                                            </path>
+                                        </svg>
+                                        <span>"A Random Walk Down Wall Street" by Burton Malkiel</span>
+                                    </li>
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z">
+                                            </path>
+                                        </svg>
+                                        <span>"The Little Book of Common Sense Investing" by John C. Bogle</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h6 class="text-blue-600 font-medium mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    Useful Websites
+                                </h6>
+                                <ul class="divide-y divide-gray-200 border rounded-lg">
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>Investopedia - Comprehensive financial education</span>
+                                    </li>
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>Yahoo Finance - News and stock data</span>
+                                    </li>
+                                    <li class="p-3 flex items-center">
+                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>Seeking Alpha - Stock analysis and ideas</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Tips Section -->
+        <div class="mb-5">
+            <div class="w-full">
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="flex items-center p-4 border-b">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z">
+                            </path>
+                        </svg>
+                        <h5 class="text-lg font-semibold m-0">Final Tips for Beginner Investors</h5>
+                    </div>
+                    <div class="p-4">
+                        <ul class="m-0 pl-5 list-disc">
+                            <li>Start with a small amount of money you can afford to lose.</li>
+                            <li>Focus on learning before earning - build your knowledge first.</li>
+                            <li>Consider long-term investments rather than short-term trades when starting out.</li>
+                            <li>Create a diverse portfolio to spread risk.</li>
+                            <li>Stay informed about market news and trends.</li>
+                            <li>Be patient and disciplined with your investment strategy.</li>
+                            <li>Don't try to time the market - consistent investing over time is more reliable.</li>
+                            <li>Review and rebalance your portfolio periodically.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final CTA + Newsletter -->
+        <div class="mb-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="mb-4 md:mb-0">
+                    <div class="bg-white rounded-lg shadow-md h-full">
+                        <div class="p-4 text-center">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z">
+                                </path>
+                            </svg>
+                            <h5 class="text-lg font-semibold">Ready to Test Your Knowledge?</h5>
+                            <p class="text-gray-600">Take our interactive quizzes to reinforce what you've learned and
+                                identify areas for further study.</p>
+                            <a href="/quizzes"
+                                class="inline-block px-4 py-2 mt-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors">Start
+                                Quiz</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-white rounded-lg shadow-md h-full">
+                        <div class="p-4 text-center">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                            <h5 class="text-lg font-semibold">Stay Updated</h5>
+                            <p class="text-gray-600">Subscribe to our newsletter for the latest market insights,
+                                tutorials, and investment tips.</p>
+                            <div class="flex mt-3">
+                                <input type="email"
+                                    class="flex-grow px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Your email address">
+                                <button
+                                    class="px-4 py-2 bg-blue-600 text-white font-medium rounded-r-md hover:bg-blue-700 transition-colors"
+                                    type="button">Subscribe</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

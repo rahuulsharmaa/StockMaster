@@ -1,0 +1,28 @@
+services/market_service.py
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Local configuration files
+.env
+*.log
+
+# Your specific file with API keys
+services/market_service.py

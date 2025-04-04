@@ -1,0 +1,575 @@
+  <!-- Login Modal -->
+    <!-- <div id="loginModal" class="modal">
+        <div class="modal-content relative">
+            <span class="modal-close text-gray-500 hover:text-gray-700" onclick="closeModal('loginModal')">&times;</span>
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <div class="text-center mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-xl font-bold text-primary mb-3">
+                        <i class="fas fa-chart-line"></i>
+                        <span>StockMaster</span>
+                    </a>
+                    <h2 class="text-xl font-bold text-textDark mb-1">Welcome Back!</h2>
+                    <p class="text-textLight text-sm">Sign in to access your trading dashboard</p>
+                </div>
+
+                <form class="space-y-4" action="/login" method="post">
+                    <div class="space-y-1">
+                        <label for="email" class="block text-textDark text-sm font-medium">Email</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-3 top-3 text-textLight"></i>
+                            <input type="email" id="email" name="email" required class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="password" class="block text-textDark text-sm font-medium">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-textLight"></i>
+                            <input type="password" id="password" name="password" required class="w-full pl-9 pr-9 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                            <i class="fas fa-eye toggle-password absolute right-3 top-3 text-textLight cursor-pointer"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="checkbox" id="remember" name="remember" class="w-3 h-3 accent-primary">
+                            <span class="text-textDark text-sm">Remember me</span>
+                        </label>
+                        <a href="#" class="text-primary hover:text-primaryDark text-sm font-medium transition-colors">Forgot?</a>
+                    </div>
+
+                    <button type="submit" class="w-full px-4 py-2 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-colors">Sign In</button>
+
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-borderColor"></div>
+                        </div>
+                        <div class="relative px-4 bg-white text-textLight text-xs">or continue with</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="#" class="w-full px-4 py-2 rounded-lg font-medium text-sm text-textDark border border-borderColor hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                            <i class="fab fa-google text-red-500"></i>
+                            <span>Google</span>
+                        </a>
+                    </div>
+                    
+                    <p class="text-center mt-4 text-textLight text-sm">
+                        Don't have an account? 
+                        <a href="#" onclick="switchModal('loginModal', 'signupModal'); return false;" class="text-primary hover:text-primaryDark font-medium transition-colors">Sign up</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div> -->
+    <!-- Login Modal -->
+
+    
+    <!-- Signup Modal -->
+    <!-- <div id="signupModal" class="modal">
+        <div class="modal-content relative">
+            <span class="modal-close text-gray-500 hover:text-gray-700" onclick="closeModal('signupModal')">&times;</span>
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <div class="text-center mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-xl font-bold text-primary mb-3">
+                        <i class="fas fa-chart-line"></i>
+                        <span>StockMaster</span>
+                    </a>
+                    <h2 class="text-xl font-bold text-textDark mb-1">Create Account</h2>
+                    <p class="text-textLight text-sm">Start your trading journey today</p>
+                </div>
+
+                <form class="space-y-4" action="/signup" method="post">
+                    <div class="space-y-1">
+                        <label for="signup-name" class="block text-textDark text-sm font-medium">Full Name</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-3 top-3 text-textLight"></i>
+                            <input type="text" id="signup-name" name="name" required class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label for="signup-email" class="block text-textDark text-sm font-medium">Email</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-3 top-3 text-textLight"></i>
+                            <input type="email" id="signup-email" name="email" required class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="signup-password" class="block text-textDark text-sm font-medium">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-textLight"></i>
+                            <input type="password" id="signup-password" name="password" required class="w-full pl-9 pr-9 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                            <i class="fas fa-eye toggle-password absolute right-3 top-3 text-textLight cursor-pointer"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="terms" name="terms" required class="w-3 h-3 accent-primary">
+                        <label for="terms" class="text-textDark text-sm">
+                            I agree to the <a href="#" class="text-primary hover:underline">Terms</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full px-4 py-2 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-colors">Create Account</button>
+
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-borderColor"></div>
+                        </div>
+                        <div class="relative px-4 bg-white text-textLight text-xs">or sign up with</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="#" class="w-full px-4 py-2 rounded-lg font-medium text-sm text-textDark border border-borderColor hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                            <i class="fab fa-google text-red-500"></i>
+                            <span>Google</span>
+                        </a>
+                    </div>
+                    
+                    <p class="text-center mt-4 text-textLight text-sm">
+                        Already have an account? 
+                        <a href="#" onclick="switchModal('signupModal', 'loginModal'); return false;" class="text-primary hover:text-primaryDark font-medium transition-colors">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div> -->
+    <!-- Signup Modal -->
+
+    <!-- <script>
+
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto'; // Enable scrolling
+        }
+
+        function switchModal(currentModalId, newModalId) {
+            closeModal(currentModalId);
+            setTimeout(() => openModal(newModalId), 100); // Small delay for better UX
+        }
+
+        // Toggle password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.toggle-password').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const passwordInput = this.previousElementSibling;
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+        });
+        
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            if (document.getElementById('loginModal').contains(event.target) && !document.querySelector('#loginModal .modal-content').contains(event.target)) {
+                closeModal('loginModal');
+            }
+            if (document.getElementById('signupModal').contains(event.target) && !document.querySelector('#signupModal .modal-content').contains(event.target)) {
+                closeModal('signupModal');
+            }
+        };
+    </script> -->
+
+
+    <!-- Insights and Predictions -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card" id="market-insights-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Latest Market Insights</h5>
+                <small class="text-muted" id="market-last-updated"></small>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px; overflow-y: auto;">
+                    <ul class="list-group" id="market-news-list">
+                        <!-- News items here -->
+                        <li class="list-group-item">
+                            <h6>Tech Stocks Rally</h6>
+                            <p>Major tech companies see gains after positive quarterly earnings reports.</p>
+                            <small class="text-muted">March 8, 2025</small>
+                        </li>
+                        <li class="list-group-item">
+                            <h6>Federal Reserve Meeting</h6>
+                            <p>Fed signals potential rate cut in upcoming meeting, markets respond positively.</p>
+                            <small class="text-muted">March 5, 2025</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <!-- AI Predictions card content (unchanged) -->
+            <div class="card-header">
+                <h5 class="card-title">AI Predictions</h5>
+            </div>
+            <div class="card-body">
+                <div class="prediction-meter">
+                    <div class="d-flex justify-content-between">
+                        <h6>AAPL</h6>
+                        <span class="badge bg-success">Bullish</span>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-success" 
+                             role="progressbar" style="width: 85%;"
+                             aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                            85%
+                        </div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">3-month forecast</small>
+                </div>
+                <div class="prediction-meter">
+                    <div class="d-flex justify-content-between">
+                        <h6>MSFT</h6>
+                        <span class="badge bg-success">Bullish</span>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-success" 
+                             role="progressbar" style="width: 78%;"
+                             aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+                            78%
+                        </div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">3-month forecast</small>
+                </div>
+                <div class="prediction-meter">
+                    <div class="d-flex justify-content-between">
+                        <h6>TSLA</h6>
+                        <span class="badge bg-warning">Neutral</span>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-warning" 
+                             role="progressbar" style="width: 52%;"
+                             aria-valuenow="52" aria-valuemin="0" aria-valuemax="100">
+                            52%
+                        </div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">3-month forecast</small>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+// Modify the showStockDetailPopup function to fetch actual predictions
+function showStockDetailPopup(stockData) {
+    // Set the stock title
+    document.getElementById('popup-stock-title').textContent = `${stockData.name} (${stockData.symbol})`;
+
+    // Set price data
+    document.getElementById('popup-current-price').textContent = `$${stockData.price.toLocaleString()}`;
+    const priceChange = document.getElementById('popup-price-change');
+    priceChange.textContent = `${stockData.change_pct > 0 ? '+' : ''}${stockData.change_pct.toFixed(2)}%`;
+    priceChange.className = stockData.change_direction === 'up' ? 'text-success' :
+        stockData.change_direction === 'down' ? 'text-danger' : 'text-secondary';
+
+    document.getElementById('popup-last-update').textContent = new Date().toLocaleString();
+
+    // Set placeholder data since we don't have the actual data
+    document.getElementById('popup-day-range').textContent = `$${(stockData.price * 0.98).toFixed(2)} - $${(stockData.price * 1.02).toFixed(2)}`;
+    document.getElementById('popup-52-week-range').textContent = `$${(stockData.price * 0.8).toFixed(2)} - $${(stockData.price * 1.2).toFixed(2)}`;
+    document.getElementById('popup-volume').textContent = Math.floor(Math.random() * 10000000).toLocaleString();
+    document.getElementById('popup-avg-volume').textContent = Math.floor(Math.random() * 8000000).toLocaleString();
+
+    // Set placeholder fundamentals data
+    document.getElementById('popup-market-cap').textContent = `$${Math.floor(Math.random() * 1000).toLocaleString()} B`;
+    document.getElementById('popup-pe-ratio').textContent = (Math.random() * 30 + 10).toFixed(2);
+    document.getElementById('popup-eps').textContent = `$${(Math.random() * 10).toFixed(2)}`;
+    document.getElementById('popup-dividend-yield').textContent = `${(Math.random() * 3).toFixed(2)}%`;
+    document.getElementById('popup-beta').textContent = (Math.random() * 2).toFixed(2);
+
+    // Set placeholder financials data
+    document.getElementById('popup-revenue').textContent = `$${Math.floor(Math.random() * 100).toLocaleString()} B`;
+    document.getElementById('popup-revenue-growth').textContent = `${(Math.random() * 20).toFixed(2)}%`;
+    document.getElementById('popup-gross-profit').textContent = `$${Math.floor(Math.random() * 40).toLocaleString()} B`;
+    document.getElementById('popup-net-income').textContent = `$${Math.floor(Math.random() * 20).toLocaleString()} B`;
+    document.getElementById('popup-profit-margin').textContent = `${(Math.random() * 30).toFixed(2)}%`;
+
+    // Show loading state for AI prediction tab
+    document.getElementById('popup-ai-symbol').textContent = stockData.symbol;
+    document.getElementById('popup-ai-direction').textContent = "Loading...";
+    document.getElementById('popup-ai-direction').className = "badge bg-secondary";
+    document.getElementById('popup-ai-progress').style.width = "50%";
+    document.getElementById('popup-ai-progress').textContent = "Loading...";
+    document.getElementById('popup-ai-progress').className = "progress-bar bg-secondary";
+    document.getElementById('popup-ai-confidence').textContent = "Calculating...";
+    document.getElementById('popup-ai-factors').textContent = "Analyzing market data...";
+
+    // Show the popup
+    document.getElementById('popup-backdrop').style.display = 'block';
+    document.getElementById('stock-detail-popup').style.display = 'block';
+
+    // Fetch AI prediction data from our API
+    fetch(`/api/stock/prediction/${stockData.symbol}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load prediction data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            updateAIPredictionTab(data);
+        })
+        .catch(error => {
+            console.error('Error fetching AI prediction:', error);
+            document.getElementById('popup-ai-direction').textContent = "Error";
+            document.getElementById('popup-ai-direction').className = "badge bg-danger";
+            document.getElementById('popup-ai-progress').style.width = "100%";
+            document.getElementById('popup-ai-progress').textContent = "Failed to load prediction";
+            document.getElementById('popup-ai-progress').className = "progress-bar bg-danger";
+            document.getElementById('popup-ai-confidence').textContent = "N/A";
+            document.getElementById('popup-ai-factors').textContent = "Error fetching prediction data. Please try again later.";
+        });
+}
+
+// Add a new function to update the AI prediction tab with real data
+function updateAIPredictionTab(predictionData) {
+    if (!predictionData || !predictionData.direction) {
+        document.getElementById('popup-ai-direction').textContent = "Unavailable";
+        document.getElementById('popup-ai-direction').className = "badge bg-secondary";
+        document.getElementById('popup-ai-progress').style.width = "50%";
+        document.getElementById('popup-ai-progress').textContent = "N/A";
+        document.getElementById('popup-ai-confidence').textContent = "N/A";
+        document.getElementById('popup-ai-factors').textContent = "Prediction data unavailable";
+        return;
+    }
+
+    // Update the direction badge
+    const direction = predictionData.direction.toLowerCase();
+    const directionClass = direction === 'bullish' ? 'bg-success' : 
+                          direction === 'bearish' ? 'bg-danger' : 'bg-warning';
+    
+    document.getElementById('popup-ai-direction').textContent = direction.charAt(0).toUpperCase() + direction.slice(1);
+    document.getElementById('popup-ai-direction').className = `badge ${directionClass}`;
+
+    // Update the prediction score progress bar
+    const score = Math.round(predictionData.prediction_score);
+    document.getElementById('popup-ai-progress').style.width = `${score}%`;
+    document.getElementById('popup-ai-progress').textContent = `${score}%`;
+    document.getElementById('popup-ai-progress').className = `progress-bar ${directionClass}`;
+
+    // Update confidence and factors
+    document.getElementById('popup-ai-confidence').textContent = predictionData.confidence || "Medium";
+    document.getElementById('popup-ai-factors').textContent = predictionData.factors || "Technical analysis, market trends";
+
+    // Add a note about the model
+    const tabContent = document.getElementById('ai-prediction-content');
+    const modelNote = document.createElement('p');
+    modelNote.className = 'mt-3 text-muted small';
+    modelNote.textContent = 'Prediction based on LSTM neural network model trained on historical price data and fundamental analysis.';
+    
+    // Only add the note if it doesn't already exist
+    if (!document.querySelector('#ai-prediction-content .text-muted.small')) {
+        tabContent.appendChild(modelNote);
+    }
+}
+
+// Also update the AI predictions in the dashboard cards
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch predictions for the dashboard cards
+    const symbols = ['AAPL', 'MSFT', 'TSLA'];
+    
+    symbols.forEach(symbol => {
+        fetch(`/api/stock/prediction/${symbol}`)
+            .then(response => response.json())
+            .then(data => {
+                // Find the prediction meter for this symbol
+                const predictionMeters = document.querySelectorAll('.prediction-meter');
+                
+                predictionMeters.forEach(meter => {
+                    const symbolEl = meter.querySelector('h6');
+                    if (symbolEl && symbolEl.textContent === symbol) {
+                        updatePredictionMeter(meter, data);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error(`Error fetching prediction for ${symbol}:`, error);
+            });
+    });
+});
+
+// Function to update a prediction meter with real data
+function updatePredictionMeter(meterElement, predictionData) {
+    if (!predictionData || !predictionData.direction) {
+        return;
+    }
+    
+    const direction = predictionData.direction.toLowerCase();
+    const badgeClass = direction === 'bullish' ? 'bg-success' : 
+                      direction === 'bearish' ? 'bg-danger' : 'bg-warning';
+    
+    const badge = meterElement.querySelector('.badge');
+    if (badge) {
+        badge.textContent = direction.charAt(0).toUpperCase() + direction.slice(1);
+        badge.className = `badge ${badgeClass}`;
+    }
+    
+    const progressBar = meterElement.querySelector('.progress-bar');
+    if (progressBar) {
+        const score = Math.round(predictionData.prediction_score);
+        progressBar.style.width = `${score}%`;
+        progressBar.textContent = `${score}%`;
+        progressBar.className = `progress-bar ${badgeClass}`;
+        progressBar.setAttribute('aria-valuenow', score);
+    }
+}
+
+    <!-- Recommended Resources - Enhanced styling -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card topic-card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-bookmark text-primary me-2"></i>
+                    <h5 class="card-title mb-0">Additional Resources</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-book me-2"></i>
+                                Books for Beginners
+                            </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-book resource-icon text-primary"></i>
+                                    <span>"The Intelligent Investor" by Benjamin Graham</span>
+                                </li>
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-book resource-icon text-primary"></i>
+                                    <span>"A Random Walk Down Wall Street" by Burton Malkiel</span>
+                                </li>
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-book resource-icon text-primary"></i>
+                                    <span>"The Little Book of Common Sense Investing" by John C. Bogle</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-globe me-2"></i>
+                                Useful Websites
+                            </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-globe resource-icon text-primary"></i>
+                                    <span>Investopedia - Comprehensive financial education</span>
+                                </li>
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-globe resource-icon text-primary"></i>
+                                    <span>Yahoo Finance - News and stock data</span>
+                                </li>
+                                <li class="list-group-item resource-link">
+                                    <i class="fas fa-globe resource-icon text-primary"></i>
+                                    <span>Seeking Alpha - Stock analysis and ideas</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Tips Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card tips-card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-lightbulb text-primary me-2"></i>
+                    <h5 class="card-title mb-0">Final Tips for Beginner Investors</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Start with a small amount of money you can afford to lose.</li>
+                        <li>Focus on learning before earning - build your knowledge first.</li>
+                        <li>Consider long-term investments rather than short-term trades when starting out.</li>
+                        <li>Create a diverse portfolio to spread risk.</li>
+                        <li>Stay informed about market news and trends.</li>
+                        <li>Be patient and disciplined with your investment strategy.</li>
+                        <li>Don't try to time the market - consistent investing over time is more reliable.</li>
+                        <li>Review and rebalance your portfolio periodically.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Final CTA + Newsletter -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-chalkboard-teacher fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">Ready to Test Your Knowledge?</h5>
+                    <p class="card-text">Take our interactive quizzes to reinforce what you've learned and identify areas for further study.</p>
+                    <a href="/quizzes" class="btn btn-primary mt-3">Start Quiz</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-envelope-open-text fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">Stay Updated</h5>
+                    <p class="card-text">Subscribe to our newsletter for the latest market insights, tutorials, and investment tips.</p>
+                    <div class="input-group mt-3">
+                        <input type="email" class="form-control" placeholder="Your email address">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <form action="/change-password" method="POST">
+        <div class="mb-3">
+            <label for="currentPassword" class="form-label">Current Password</label>
+            <input type="password" class="form-control" id="currentPassword" name="current_password" required>
+        </div>
+        <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="newPassword" name="new_password" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+        </div>
+        <div class="mb-3">
+            <div class="progress" style="height: 5px;">
+                <div class="progress-bar bg-success" role="progressbar"
+                    style="width: 80%;" aria-valuenow="80" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+            </div>
+            <small class="text-muted">Password strength: Strong</small>
+        </div>
+        {% if password_error %}
+        <div class="alert alert-danger">{{ password_error }}</div>
+        {% endif %}
+        {% if password_success %}
+        <div class="alert alert-success">{{ password_success }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Update Password</button>
+    </form>

@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}StockMaster - About Us{% endblock %}
+
+{% block content %}
+<section class="pt-12 pb-20 bg-gradient-to-b from-bgLight to-white">
+    <!-- Hero Section -->
+    <div class="max-w-6xl mx-auto px-6 sm:px-8">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-textDark mb-4 leading-tight">
+                About <span class="bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent">StockMaster</span>
+            </h1>
+            <p class="text-lg text-textLight max-w-3xl mx-auto">
+                Empowering students and investors with AI-driven tools for smarter trading decisions
+            </p>
+        </div>
+
+        <!-- Our Mission -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-16">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold text-textDark mb-4">Our Mission</h2>
+                    <p class="text-textLight mb-4">
+                        StockMaster was created as a college project with a mission to democratize financial data analysis and make stock market predictions accessible to everyone.
+                    </p>
+                    <p class="text-textLight mb-4">
+                        We believe that with the right tools and knowledge, anyone can make informed investment decisions regardless of their experience level or financial background.
+                    </p>
+                    <div class="flex items-center gap-4 mt-6">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-textDark">Accessible</h3>
+                            <p class="text-sm text-textLight">Making market insights available to everyone</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 mt-4">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-textDark">Intelligent</h3>
+                            <p class="text-sm text-textLight">Leveraging AI to provide actionable predictions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="rounded-xl overflow-hidden shadow-lg border border-borderColor">
+                        <div class="bg-bgLight p-8 flex items-center justify-center">
+                            <div class="w-full max-w-sm">
+                                <div class="relative">
+                                    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-textDark">AI Prediction</h4>
+                                                <p class="text-xs text-textLight">TSLA · 24h trend</p>
+                                            </div>
+                                        </div>
+                                        <div class="h-32 bg-white mb-3 relative">
+                                            <!-- Mockup Chart -->
+                                            <div class="w-full h-full flex items-end">
+                                                <div class="flex-1 bg-green-500/10 h-1/4 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-2/5 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-1/3 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-3/5 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-1/2 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-2/3 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-5/6 rounded-sm"></div>
+                                                <div class="flex-1 bg-green-500/10 h-full rounded-sm"></div>
+                                            </div>
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <span class="text-green-500 font-bold text-2xl">+8.2%</span>
+                                            </div>
+                                        </div>
+                                        <a href="/dashboard" class="w-full py-2 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all duration-300 text-sm flex justify-center items-center">
+                                            View Full Analysis
+                                        </a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Offer -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-textDark mb-2 text-center">What We Offer</h2>
+            <p class="text-textLight text-center mb-12">Our platform combines cutting-edge technology with educational resources</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">AI-Powered Predictions</h3>
+                    <p class="text-textLight">
+                        Our advanced machine learning algorithms analyze market data to provide accurate stock predictions and trends.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-chart-bar text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">Stock Analysis</h3>
+                    <p class="text-textLight">
+                        Comprehensive tools to analyze stock performance, trends, and financial indicators for informed decision-making.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-newspaper text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">Real-Time News</h3>
+                    <p class="text-textLight">
+                        Stay updated with the latest market news and events that could impact your investments.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-graduation-cap text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">Learning Module</h3>
+                    <p class="text-textLight">
+                        Personalized educational resources to help beginners understand stock market fundamentals before investing.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-tachometer-alt text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">Personalized Dashboard</h3>
+                    <p class="text-textLight">
+                        A customizable dashboard to track your favorite stocks, predictions, and performance metrics.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5">
+                        <i class="fas fa-shield-alt text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark mb-3">Secure Authentication</h3>
+                    <p class="text-textLight">
+                        Industry-standard hashed authentication to ensure your account and financial data remain secure.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Team -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-16">
+            <h2 class="text-3xl font-bold text-textDark mb-2 text-center">Our Team</h2>
+            <p class="text-textLight text-center mb-12">Meet the students behind StockMaster</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Team Member 1 (You can replace with actual team members) -->
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 border-4 border-white shadow-md">
+                        <i class="fas fa-user-graduate text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark">Lead Developer</h3>
+                    <p class="text-textLight">Computer Science Student</p>
+                </div>
+                
+                <!-- Team Member 2 -->
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 border-4 border-white shadow-md">
+                        <i class="fas fa-user-graduate text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark">AI Specialist</h3>
+                    <p class="text-textLight">Data Science Student</p>
+                </div>
+                
+                <!-- Team Member 3 -->
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 border-4 border-white shadow-md">
+                        <i class="fas fa-user-graduate text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-textDark">UI/UX Designer</h3>
+                    <p class="text-textLight">Design & CS Student</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="bg-bgAlt rounded-2xl p-8 mb-16">
+            <h2 class="text-3xl font-bold text-textDark mb-2 text-center">Our Technology</h2>
+            <p class="text-textLight text-center mb-12">Built with modern and powerful technologies</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+                <!-- Tech 1 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fab fa-python text-4xl text-blue-500 mb-2"></i>
+                    <h3 class="font-bold text-textDark">Python</h3>
+                </div>
+                
+                <!-- Tech 2 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fas fa-server text-4xl text-green-500 mb-2"></i>
+                    <h3 class="font-bold text-textDark">FastAPI</h3>
+                </div>
+                
+                <!-- Tech 3 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fas fa-file-code text-4xl text-orange-500 mb-2"></i>
+                    <h3 class="font-bold text-textDark">Jinja2</h3>
+                </div>
+                
+                <!-- Tech 4 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fas fa-brain text-4xl text-purple-500 mb-2"></i>
+                    <h3 class="font-bold text-textDark">TensorFlow</h3>
+                </div>
+                
+                <!-- Tech 5 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fab fa-css3 text-4xl text-blue-400 mb-2"></i>
+                    <h3 class="font-bold text-textDark">Tailwind</h3>
+                </div>
+                
+                <!-- Tech 6 -->
+                <div class="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all">
+                    <i class="fas fa-database text-4xl text-blue-500 mb-2"></i> <!-- Changed color to blue -->
+                    <h3 class="font-bold text-textDark">PostgreSQL</h3>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Project Goals -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-textDark mb-2 text-center">Project Goals</h2>
+            <p class="text-textLight text-center mb-12">What we aim to achieve with StockMaster</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Goal 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-textDark mb-2">Educational Purpose</h3>
+                            <p class="text-textLight">
+                                To create a comprehensive platform that helps students and beginners understand stock market dynamics and make informed decisions based on data-driven insights rather than speculation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Goal 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-textDark mb-2">Technical Innovation</h3>
+                            <p class="text-textLight">
+                                To implement advanced AI and machine learning algorithms that can process vast amounts of market data and provide accurate predictions for educational purposes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Goal 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-textDark mb-2">Accessibility</h3>
+                            <p class="text-textLight">
+                                To create an intuitive and user-friendly platform that makes complex financial data and analysis accessible to users of all experience levels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Goal 4 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-textDark mb-2">Responsible Trading</h3>
+                            <p class="text-textLight">
+                                To promote responsible investment practices through education and real-time analysis, helping users understand both opportunities and risks in the market.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="bg-gradient-to-r from-primary to-blue-700 rounded-2xl p-8 text-white text-center">
+            <h2 class="text-3xl font-bold mb-4">Have Questions?</h2>
+            <p class="max-w-2xl mx-auto mb-6">
+                We're always looking to improve our project. If you have questions or suggestions about StockMaster, we'd love to hear from you.
+            </p>
+            <a href="/#contact" class="inline-block px-6 py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-100 transition-colors">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add any additional scripts specific to the about page here
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page in the navigation
+        document.querySelectorAll('nav a[href="/#about"]').forEach(link => {
+            link.classList.add('text-primary');
+        });
+    });
+</script>
+{% endblock %}

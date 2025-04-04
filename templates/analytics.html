@@ -1,0 +1,730 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Analytics - StockMaster{% endblock %}
+
+{% block extra_head %}
+<style>
+    .prediction-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .prediction-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .bullish-glow {
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+    }
+    
+    .bearish-glow {
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+    
+    .confidence-bar {
+        height: 8px;
+        border-radius: 4px;
+        background: #e2e8f0;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .confidence-level {
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 4px;
+    }
+    
+    .tooltip {
+        visibility: hidden;
+        position: absolute;
+        background-color: #1e293b;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+    
+    .has-tooltip:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-12 bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Stock Analytics & Predictions</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Advanced AI-powered stock predictions and technical analysis to inform your trading decisions.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Stock Search Section -->
+<section class="py-8 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-md rounded-xl p-6">
+            <h2 class="text-2xl font-semibold mb-6">Analyze Any Stock</h2>
+            
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-grow">
+                    <input type="text" id="stockSymbol" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                        placeholder="Enter stock symbol (e.g., AAPL, MSFT, GOOGL)">
+                </div>
+                <button id="analyzeButton"
+                    class="px-6 py-3 bg-primary hover:bg-primaryDark text-white font-medium rounded-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-search"></i>
+                    <span>Analyze Stock</span>
+                </button>
+            </div>
+            
+            <div class="mt-4 text-sm text-gray-500">
+                <p>Popular: 
+                    <a href="#" class="text-primary hover:underline stock-shortcut">AAPL</a> &bull;
+                    <a href="#" class="text-primary hover:underline stock-shortcut">MSFT</a> &bull;
+                    <a href="#" class="text-primary hover:underline stock-shortcut">AMZN</a> &bull;
+                    <a href="#" class="text-primary hover:underline stock-shortcut">GOOGL</a> &bull;
+                    <a href="#" class="text-primary hover:underline stock-shortcut">TSLA</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Loading Indicator -->
+<div id="loadingIndicator" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    <p class="mt-4 text-xl text-gray-600">Analyzing stock data and generating predictions...</p>
+</div>
+
+<!-- Error Message -->
+<div id="errorMessage" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-medium text-red-800">Error</h3>
+                <div class="mt-2 text-red-700" id="errorContent">
+                    Unable to retrieve stock data. Please try again with a valid stock symbol.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Section -->
+<section id="resultsSection" class="hidden py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Stock Info Header -->
+        <div class="mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold" id="stockName">Stock Name</h2>
+                    <p class="text-lg text-gray-600" id="stockSymbolDisplay">SYMBOL</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-3xl font-bold" id="currentPrice">$0.00</div>
+                    <div class="flex items-center gap-2 justify-end">
+                        <span id="priceChange" class="text-lg"></span>
+                        <span id="priceChangePercent" class="px-2 py-1 rounded-md text-sm font-medium"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Chart -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-md p-6 h-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold">Price History & Prediction</h3>
+                        <div class="flex gap-2">
+                            <button class="period-btn px-3 py-1 text-sm rounded-md bg-blue-100 text-primary font-medium" data-period="1mo">1M</button>
+                            <button class="period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600" data-period="3mo">3M</button>
+                            <button class="period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600" data-period="6mo">6M</button>
+                            <button class="period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600" data-period="1y">1Y</button>
+                        </div>
+                    </div>
+                    
+                    <div class="h-80">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Prediction Details -->
+            <div class="lg:col-span-1">
+                <div id="predictionCard" class="prediction-card bg-white rounded-xl shadow-md p-6 h-full">
+                    <h3 class="text-xl font-semibold mb-6">AI Prediction</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Prediction Direction -->
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600 font-medium">Prediction:</span>
+                                <span id="predictionDirection" class="text-lg font-bold"></span>
+                            </div>
+                            <div class="flex items-center justify-between mt-1">
+                                <span class="text-gray-600">Target Price:</span>
+                                <span id="predictedPrice" class="font-semibold"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Confidence Score -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-600 font-medium">Confidence:</span>
+                                <span id="confidenceText" class="font-medium"></span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div id="confidenceLevel" class="confidence-level"></div>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>Bearish</span>
+                                <span>Neutral</span>
+                                <span>Bullish</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Signal Factors -->
+                        <div>
+                            <h4 class="text-gray-600 font-medium mb-3">Key Factors:</h4>
+                            <ul id="signalFactors" class="space-y-2 text-sm">
+                                <!-- Factors will be inserted here dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Indicators Section -->
+        <div class="mt-8">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-6">Technical Indicators</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- RSI -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">RSI (14)</span>
+                            <div class="has-tooltip">
+                                <i class="fas fa-info-circle text-gray-400"></i>
+                                <span class="tooltip -mt-16">Relative Strength Index - Momentum indicator</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xl font-bold" id="rsiValue">-</div>
+                            <div class="text-sm" id="rsiSignal"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- MACD -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">MACD</span>
+                            <div class="has-tooltip">
+                                <i class="fas fa-info-circle text-gray-400"></i>
+                                <span class="tooltip -mt-16">Moving Average Convergence Divergence</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xl font-bold" id="macdValue">-</div>
+                            <div class="text-sm" id="macdSignal"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Moving Averages -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">MA Trend</span>
+                            <div class="has-tooltip">
+                                <i class="fas fa-info-circle text-gray-400"></i>
+                                <span class="tooltip -mt-16">Moving Average Trend Analysis</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xl font-bold" id="maTrend">-</div>
+                            <div class="text-sm" id="maTrendDetail"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Momentum -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Momentum</span>
+                            <div class="has-tooltip">
+                                <i class="fas fa-info-circle text-gray-400"></i>
+                                <span class="tooltip -mt-16">Price change momentum over time</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xl font-bold" id="momentumValue">-</div>
+                            <div class="text-sm" id="momentumSignal"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Similar Stocks Section -->
+        <div class="mt-8">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-6">Similar Stocks</h3>
+                <div id="similarStocks" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <!-- Similar stocks will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart instance
+    let priceChart = null;
+    
+    // Handle stock shortcuts
+    document.querySelectorAll('.stock-shortcut').forEach(shortcut => {
+        shortcut.addEventListener('click', function(e) {
+            e.preventDefault();
+            const symbol = this.textContent;
+            document.getElementById('stockSymbol').value = symbol;
+            analyzeStock(symbol);
+        });
+    });
+    
+    // Handle analyze button click
+    document.getElementById('analyzeButton').addEventListener('click', function() {
+        const symbol = document.getElementById('stockSymbol').value.trim().toUpperCase();
+        if (symbol) {
+            analyzeStock(symbol);
+        }
+    });
+    
+    // Handle enter key in the input field
+    document.getElementById('stockSymbol').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const symbol = this.value.trim().toUpperCase();
+            if (symbol) {
+                analyzeStock(symbol);
+            }
+        }
+    });
+    
+    // Handle period selection
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update UI to show active period
+            document.querySelectorAll('.period-btn').forEach(b => {
+                b.classList.remove('bg-blue-100', 'text-primary');
+                b.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            this.classList.remove('bg-gray-100', 'text-gray-600');
+            this.classList.add('bg-blue-100', 'text-primary');
+            
+            // Update chart with new period data
+            const period = this.getAttribute('data-period');
+            const symbol = document.getElementById('stockSymbolDisplay').textContent;
+            fetchHistoricalData(symbol, period);
+        });
+    });
+    
+    // Function to show error message
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        const errorContent = document.getElementById('errorContent');
+        errorContent.textContent = message || 'An error occurred. Please try again.';
+        errorDiv.classList.remove('hidden');
+        
+        // Hide loading and results
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        document.getElementById('resultsSection').classList.add('hidden');
+    }
+    
+    // Function to show loading state
+    function showLoading() {
+        document.getElementById('loadingIndicator').classList.remove('hidden');
+        document.getElementById('errorMessage').classList.add('hidden');
+        document.getElementById('resultsSection').classList.add('hidden');
+    }
+    
+    // Function to analyze stock
+    async function analyzeStock(symbol) {
+        showLoading();
+        
+        try {
+            // Fetch stock prediction from your API
+            const predictionResponse = await fetch(`/api/predict/${symbol}`);
+            if (!predictionResponse.ok) {
+                throw new Error(`Error fetching prediction for ${symbol}`);
+            }
+            const predictionData = await predictionResponse.json();
+            
+            // Check if prediction was successful
+            if (!predictionData.success) {
+                showError(predictionData.error || `Could not generate prediction for ${symbol}`);
+                return;
+            }
+            
+            // Fetch stock info
+            const infoResponse = await fetch(`/api/stock/${symbol}`);
+            if (!infoResponse.ok) {
+                throw new Error(`Error fetching info for ${symbol}`);
+            }
+            const stockInfo = await infoResponse.json();
+            
+            // Update UI with the data
+            updateUI(symbol, predictionData, stockInfo);
+            
+            // Fetch historical data and update chart
+            fetchHistoricalData(symbol, '1mo');
+            
+            // Show results section
+            document.getElementById('loadingIndicator').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+        } catch (error) {
+            console.error('Error analyzing stock:', error);
+            showError(`Error analyzing stock ${symbol}: ${error.message}`);
+        }
+    }
+    
+    // Function to fetch historical data and update chart
+    async function fetchHistoricalData(symbol, period) {
+        try {
+            const response = await fetch(`/api/stock/${symbol}/history?period=${period}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching historical data for ${symbol}`);
+            }
+            const historyData = await response.json();
+            
+            // Update the chart
+            updatePriceChart(historyData, symbol);
+            
+        } catch (error) {
+            console.error('Error fetching historical data:', error);
+            // Don't show error, just log it
+        }
+    }
+    
+    // Function to update UI with prediction and stock info
+    function updateUI(symbol, predictionData, stockInfo) {
+        // Update stock info header
+        document.getElementById('stockName').textContent = stockInfo.name || symbol;
+        document.getElementById('stockSymbolDisplay').textContent = symbol;
+        document.getElementById('currentPrice').textContent = `$${predictionData.current_price.toFixed(2)}`;
+        
+        // Calculate price change if available
+        if (stockInfo.previousClose) {
+            const priceChange = predictionData.current_price - stockInfo.previousClose;
+            const priceChangePercent = (priceChange / stockInfo.previousClose) * 100;
+            
+            document.getElementById('priceChange').textContent = `${priceChange >= 0 ? '+' : ''}$${priceChange.toFixed(2)}`;
+            document.getElementById('priceChangePercent').textContent = `${priceChangePercent >= 0 ? '+' : ''}${priceChangePercent.toFixed(2)}%`;
+            
+            // Style based on direction
+            if (priceChange >= 0) {
+                document.getElementById('priceChange').classList.add('text-green-600');
+                document.getElementById('priceChangePercent').classList.add('bg-green-100', 'text-green-800');
+            } else {
+                document.getElementById('priceChange').classList.add('text-red-600');
+                document.getElementById('priceChangePercent').classList.add('bg-red-100', 'text-red-800');
+            }
+        } else {
+            document.getElementById('priceChange').textContent = '-';
+            document.getElementById('priceChangePercent').textContent = '-';
+        }
+        
+        // Update prediction card
+        const predictionCard = document.getElementById('predictionCard');
+        predictionCard.classList.remove('bullish-glow', 'bearish-glow');
+        
+        if (predictionData.direction === 'bullish') {
+            document.getElementById('predictionDirection').textContent = 'BULLISH';
+            document.getElementById('predictionDirection').className = 'text-lg font-bold text-green-600';
+            predictionCard.classList.add('bullish-glow');
+        } else {
+            document.getElementById('predictionDirection').textContent = 'BEARISH';
+            document.getElementById('predictionDirection').className = 'text-lg font-bold text-red-600';
+            predictionCard.classList.add('bearish-glow');
+        }
+        
+        // Update predicted price
+        const priceDiff = predictionData.predicted_price - predictionData.current_price;
+        const priceDiffPercent = (priceDiff / predictionData.current_price) * 100;
+        document.getElementById('predictedPrice').textContent = `$${predictionData.predicted_price.toFixed(2)} (${priceDiffPercent >= 0 ? '+' : ''}${priceDiffPercent.toFixed(2)}%)`;
+        document.getElementById('predictedPrice').className = `font-semibold ${priceDiff >= 0 ? 'text-green-600' : 'text-red-600'}`;
+        
+        // Update confidence
+        document.getElementById('confidenceText').textContent = predictionData.confidence;
+        const confidenceLevel = document.getElementById('confidenceLevel');
+        const score = predictionData.prediction_score;
+        confidenceLevel.style.width = `${score}%`;
+        
+        // Color based on direction and score
+        if (score > 50) {
+            confidenceLevel.style.background = `linear-gradient(to right, #fdba74, #f97316, #ea580c)`;
+        } else {
+            confidenceLevel.style.background = `linear-gradient(to right, #93c5fd, #3b82f6, #1d4ed8)`;
+        }
+        
+        // Update factors
+        const factorsList = document.getElementById('signalFactors');
+        factorsList.innerHTML = '';  // Clear existing factors
+        
+        // Split factors by comma and create list items
+        const factors = predictionData.factors.split(',').map(f => f.trim());
+        factors.forEach(factor => {
+            if (!factor) return;
+            
+            const li = document.createElement('li');
+            li.className = 'flex items-start';
+            
+            // Determine icon based on factor sentiment
+            let iconClass = 'text-gray-500';
+            if (factor.includes('uptrend') || factor.includes('positive') || factor.includes('oversold') || 
+                factor.includes('strong dividend') || factor.includes('attractive')) {
+                iconClass = 'text-green-500';
+            } else if (factor.includes('downtrend') || factor.includes('negative') || factor.includes('overbought') || 
+                     factor.includes('thin profit') || factor.includes('high debt')) {
+                iconClass = 'text-red-500';
+            }
+            
+            li.innerHTML = `
+                <i class="fas fa-circle text-xs mt-1 mr-2 ${iconClass}"></i>
+                <span>${factor}</span>
+            `;
+            factorsList.appendChild(li);
+        });
+        
+        // Update technical indicators
+        if (predictionData.technical_indicators) {
+            const ti = predictionData.technical_indicators;
+            
+            // RSI
+            document.getElementById('rsiValue').textContent = ti.rsi ? ti.rsi.toFixed(2) : '-';
+            let rsiSignal = '';
+            if (ti.rsi < 30) {
+                rsiSignal = '<span class="text-green-600">Oversold</span>';
+            } else if (ti.rsi > 70) {
+                rsiSignal = '<span class="text-red-600">Overbought</span>';
+            } else {
+                rsiSignal = '<span class="text-gray-600">Neutral</span>';
+            }
+            document.getElementById('rsiSignal').innerHTML = rsiSignal;
+            
+            // MACD
+            if (ti.macd !== undefined && ti.macd_signal !== undefined) {
+                document.getElementById('macdValue').textContent = ti.macd.toFixed(3);
+                let macdSignal = '';
+                if (ti.macd > ti.macd_signal) {
+                    macdSignal = '<span class="text-green-600">Bullish Crossover</span>';
+                } else {
+                    macdSignal = '<span class="text-red-600">Bearish Crossover</span>';
+                }
+                document.getElementById('macdSignal').innerHTML = macdSignal;
+            }
+            
+            // MA Trend
+            let maStatus = 'Neutral';
+            let maClass = 'text-gray-600';
+            let maDetail = '';
+            
+            if (ti.ma5 > ti.ma20 && ti.ma20 > ti.ma50) {
+                maStatus = 'Strong Uptrend';
+                maClass = 'text-green-600';
+                maDetail = 'All MAs aligned bullish';
+            } else if (ti.ma5 > ti.ma20) {
+                maStatus = 'Short-Term Uptrend';
+                maClass = 'text-green-600';
+                maDetail = 'Short-term bullish signal';
+            } else if (ti.ma5 < ti.ma20 && ti.ma20 < ti.ma50) {
+                maStatus = 'Strong Downtrend';
+                maClass = 'text-red-600';
+                maDetail = 'All MAs aligned bearish';
+            } else if (ti.ma5 < ti.ma20) {
+                maStatus = 'Short-Term Downtrend';
+                maClass = 'text-red-600';
+                maDetail = 'Short-term bearish signal';
+            }
+            
+            document.getElementById('maTrend').textContent = maStatus;
+            document.getElementById('maTrend').className = `text-xl font-bold ${maClass}`;
+            document.getElementById('maTrendDetail').textContent = maDetail;
+            
+            // Momentum
+            document.getElementById('momentumValue').textContent = ti.momentum ? ti.momentum.toFixed(2) + '%' : '-';
+            let momentumSignal = '';
+            if (ti.momentum > 5) {
+                momentumSignal = '<span class="text-green-600">Strong Positive</span>';
+            } else if (ti.momentum > 0) {
+                momentumSignal = '<span class="text-green-600">Positive</span>';
+            } else if (ti.momentum < -5) {
+                momentumSignal = '<span class="text-red-600">Strong Negative</span>';
+            } else if (ti.momentum < 0) {
+                momentumSignal = '<span class="text-red-600">Negative</span>';
+            } else {
+                momentumSignal = '<span class="text-gray-600">Neutral</span>';
+            }
+            document.getElementById('momentumSignal').innerHTML = momentumSignal;
+        }
+        
+        // Load similar stocks
+        loadSimilarStocks(symbol, stockInfo.sector);
+    }
+    
+    // Function to update price
+    // Function to update price chart
+    function updatePriceChart(historyData, symbol) {
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (priceChart) {
+            priceChart.destroy();
+        }
+        
+        // Process the data
+        const dates = historyData.dates;
+        const prices = historyData.prices;
+        
+        // Get prediction data if available
+        let predictionData = [];
+        let predictionDates = [];
+        
+        if (historyData.prediction && historyData.prediction.dates && historyData.prediction.prices) {
+            predictionDates = historyData.prediction.dates;
+            predictionData = historyData.prediction.prices;
+        }
+        
+        // Create the chart
+        priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [...dates, ...predictionDates],
+                datasets: [
+                    {
+                        label: `${symbol} Price`,
+                        data: prices,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.2,
+                        pointRadius: 1,
+                        pointHoverRadius: 5
+                    },
+                    {
+                        label: 'Prediction',
+                        data: [...Array(dates.length).fill(null), ...predictionData],
+                        borderColor: 'rgba(220, 38, 38, 0.8)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            maxTicksLimit: 10
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        position: 'right',
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Function to load similar stocks
+    async function loadSimilarStocks(symbol, sector) {
+        try {
+            const response = await fetch(`/api/similar-stocks?symbol=${symbol}&sector=${sector || ''}`);
+            if (!response.ok) {
+                throw new Error('Error fetching similar stocks');
+            }
+            
+            const data = await response.json();
+            const container = document.getElementById('similarStocks');
+            container.innerHTML = '';
+            
+            // Add similar stocks to the UI
+            data.stocks.forEach(stock => {
+                const stockCard = document.createElement('div');
+                stockCard.className = 'bg-gray-50 rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition-all';
+                stockCard.onclick = function() {
+                    document.getElementById('stockSymbol').value = stock.symbol;
+                    analyzeStock(stock.symbol);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                
+                // Set price change color
+                const priceChangeClass = stock.change >= 0 ? 'text-green-600' : 'text-red-600';
+                
+                stockCard.innerHTML = `
+                    <div class="font-medium">${stock.symbol}</div>
+                    <div class="text-sm text-gray-600 truncate">${stock.name}</div>
+                    <div class="mt-2 flex justify-between items-center">
+                        <span>$${stock.price.toFixed(2)}</span>
+                        <span class="${priceChangeClass}">${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}%</span>
+                    </div>
+                `;
+                
+                container.appendChild(stockCard);
+            });
+            
+        } catch (error) {
+            console.error('Error loading similar stocks:', error);
+            // Don't show error, just leave section empty
+        }
+    }
+    
+    // Initialize with a default stock if one is provided in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const stockParam = urlParams.get('stock');
+    if (stockParam) {
+        document.getElementById('stockSymbol').value = stockParam;
+        analyzeStock(stockParam);
+    }
+});
+</script>
+{% endblock %}

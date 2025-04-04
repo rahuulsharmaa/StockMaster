@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}StockMaster - Smart Trading Platform{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!-- Add Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        primaryDark: '#1d4ed8',
+                        secondary: '#64748b',
+                        success: '#22c55e',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        bgLight: '#f8fafc',
+                        bgAlt: '#f1f5f9',
+                        textDark: '#1e293b',
+                        textLight: '#64748b',
+                        borderColor: '#e2e8f0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1100;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            max-width: 400px;
+            width: 100%;
+            margin: 5% auto;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Added to ensure proper padding for fixed navbar */
+        body {
+            padding-top: 70px;
+            /* Adjust based on your navbar height */
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-bgLight text-textDark font-sans leading-relaxed">
+    <!-- Navigation Bar - Fixed at the top -->
+    <nav class="bg-white shadow-md fixed w-full z-[1000] top-0 left-0" id="main-navbar"
+        style="position:position-sticky">
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 py-4 flex justify-between items-center">
+            <!-- Logo Section -->
+            <a href="/" class="flex items-center gap-2 text-2xl font-bold text-primary group">
+                <div class="bg-primary text-white p-2 rounded-lg transition-all duration-300 group-hover:rotate-12">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent">StockMaster</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center gap-8">
+                <div class="flex items-center space-x-6">
+                    <a href="/#features"
+                        class="font-medium text-textDark hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">Features</a>
+                    <a href="/#pricing"
+                        class="font-medium text-textDark hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">Pricing</a>
+                    <a href="/about"
+                        class="font-medium text-textDark hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">About</a>
+                    {% if user %}
+                    <a href="/dashboard"
+                        class="font-medium text-textDark hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">Dashboard</a>
+                    <a href="/analytics"
+                        class="font-medium text-textDark hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full">Analytics</a>
+                    {% endif %}
+                </div>
+
+                {% if user %}
+                <!-- User Profile Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-2 focus:outline-none">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-sm font-medium">{{ user.name }}</span>
+                            <i
+                                class="fas fa-chevron-down text-xs text-gray-500 group-hover:rotate-180 transition-transform duration-300"></i>
+                        </div>
+                    </button>
+                    <div
+                        class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                        <a href="/dashboard"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sign Out</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-3">
+                    <a href="#"
+                        class="px-5 py-2 rounded-lg font-semibold text-primary border-2 border-primary hover:bg-blue-50 transition-all duration-300"
+                        onclick="openModal('loginModal'); return false;">Sign In</a>
+                    <a href="#"
+                        class="px-5 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-primary to-blue-700 hover:from-blue-700 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg"
+                        onclick="openModal('signupModal'); return false;">
+                        <span class="flex items-center gap-2">
+                            <span>Get Started</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="block md:hidden text-2xl cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                id="mobile-menu-button" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white w-full border-t border-gray-100 shadow-lg transition-all duration-300 transform -translate-y-2 opacity-0"
+            id="mobile-menu">
+            <div class="px-6 py-4 flex flex-col gap-4">
+                <a href="/#features"
+                    class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                    <i class="fas fa-cube w-6"></i>
+                    <span>Features</span>
+                </a>
+                <a href="/#pricing"
+                    class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                    <i class="fas fa-tag w-6"></i>
+                    <span>Pricing</span>
+                </a>
+                <a href="/#about"
+                    class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                    <i class="fas fa-info-circle w-6"></i>
+                    <span>About</span>
+                </a>
+                {% if user %}
+                <a href="/dashboard"
+                class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                <i class="fas fa-tachometer-alt w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/analytics"
+                class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                <i class="fas fa-chart-line w-6"></i>
+                <span>Analytics</span>
+            </a>
+                
+                <hr class="my-2 border-gray-200">
+                <a href="/profile"
+                    class="py-3 px-4 font-medium text-textDark hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center">
+                    <i class="fas fa-user w-6"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="/logout"
+                    class="py-3 px-4 font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center">
+                    <i class="fas fa-sign-out-alt w-6"></i>
+                    <span>Sign Out</span>
+                </a>
+                {% else %}
+                <div class="grid grid-cols-2 gap-3 mt-2">
+                    <a href="#"
+                        class="py-3 text-center font-medium text-primary border border-primary rounded-lg hover:bg-blue-50 transition-colors"
+                        onclick="openModal('loginModal'); return false;">Sign In</a>
+                    <a href="#"
+                        class="py-3 text-center font-medium text-white bg-primary rounded-lg hover:bg-primaryDark transition-colors"
+                        onclick="openModal('signupModal'); return false;">Get Started</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content relative">
+            <span class="modal-close text-gray-500 hover:text-gray-700"
+                onclick="closeModal('loginModal')">&times;</span>
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <div class="text-center mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-xl font-bold text-primary mb-3">
+                        <i class="fas fa-chart-line"></i>
+                        <span>StockMaster</span>
+                    </a>
+                    <h2 class="text-xl font-bold text-textDark mb-1">Welcome Back!</h2>
+                    <p class="text-textLight text-sm">Sign in to access your trading dashboard</p>
+                </div>
+
+                <!-- Error message -->
+                <div id="login-error" class="hidden mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg"></div>
+
+                <!-- Success message -->
+                <div id="login-success" class="hidden mb-4 p-3 bg-green-100 text-green-700 text-sm rounded-lg"></div>
+
+                <form class="space-y-4" action="/login" method="post">
+                    <div class="space-y-1">
+                        <label for="email" class="block text-textDark text-sm font-medium">Email</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-3 top-3 text-textLight"></i>
+                            <input type="email" id="email" name="email" required
+                                class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="password" class="block text-textDark text-sm font-medium">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-textLight"></i>
+                            <input type="password" id="password" name="password" required
+                                class="w-full pl-9 pr-9 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                            <i
+                                class="fas fa-eye toggle-password absolute right-3 top-3 text-textLight cursor-pointer"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="checkbox" id="remember" name="remember" class="w-3 h-3 accent-primary">
+                            <span class="text-textDark text-sm">Remember me</span>
+                        </label>
+                        <a href="#"
+                            class="text-primary hover:text-primaryDark text-sm font-medium transition-colors">Forgot?</a>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full px-4 py-2 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-colors">Sign
+                        In</button>
+
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-borderColor"></div>
+                        </div>
+                        <div class="relative px-4 bg-white text-textLight text-xs">or continue with</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="#"
+                            class="w-full px-4 py-2 rounded-lg font-medium text-sm text-textDark border border-borderColor hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                            <i class="fab fa-google text-red-500"></i>
+                            <span>Google</span>
+                        </a>
+                    </div>
+
+                    <p class="text-center mt-4 text-textLight text-sm">
+                        Don't have an account?
+                        <a href="#" onclick="switchModal('loginModal', 'signupModal'); return false;"
+                            class="text-primary hover:text-primaryDark font-medium transition-colors">Sign up</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content relative">
+            <span class="modal-close text-gray-500 hover:text-gray-700"
+                onclick="closeModal('signupModal')">&times;</span>
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <div class="text-center mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-xl font-bold text-primary mb-3">
+                        <i class="fas fa-chart-line"></i>
+                        <span>StockMaster</span>
+                    </a>
+                    <h2 class="text-xl font-bold text-textDark mb-1">Create Account</h2>
+                    <p class="text-textLight text-sm">Start your trading journey today</p>
+                </div>
+
+                <!-- Error message -->
+                <div id="signup-error" class="hidden mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg"></div>
+
+                <form class="space-y-4" action="/signup" method="post">
+                    <div class="space-y-1">
+                        <label for="signup-name" class="block text-textDark text-sm font-medium">Full Name</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-3 top-3 text-textLight"></i>
+                            <input type="text" id="signup-name" name="name" required
+                                class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="signup-email" class="block text-textDark text-sm font-medium">Email</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-3 top-3 text-textLight"></i>
+                            <input type="email" id="signup-email" name="email" required
+                                class="w-full pl-9 pr-4 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="signup-password" class="block text-textDark text-sm font-medium">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-textLight"></i>
+                            <input type="password" id="signup-password" name="password" required
+                                class="w-full pl-9 pr-9 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                            <i class="fas fa-eye toggle-password absolute right-3 top-3 text-textLight cursor-pointer"
+                                onclick="togglePasswordVisibility('signup-password')"></i>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="signup-confirm-password" class="block text-textDark text-sm font-medium">Confirm
+                            Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-textLight"></i>
+                            <input type="password" id="signup-confirm-password" name="confirm_password" required
+                                class="w-full pl-9 pr-9 py-2 text-sm border border-borderColor rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                            <i class="fas fa-eye toggle-password absolute right-3 top-3 text-textLight cursor-pointer"
+                                onclick="togglePasswordVisibility('signup-confirm-password')"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="signup-terms" name="terms" required
+                            class="h-4 w-4 rounded text-primary focus:ring-primary/20 border-borderColor">
+                        <label for="signup-terms" class="ml-2 block text-sm text-textLight">
+                            I agree to the <a href="/terms" class="text-primary hover:underline">Terms of Service</a>
+                            and <a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition-colors font-medium text-sm">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-textLight">
+                        Already have an account? <a href="#"
+                            onclick="openModal('loginModal'); closeModal('signupModal')"
+                            class="text-primary hover:underline font-medium">Log in</a>
+                    </p>
+                </div>
+
+                <div class="my-6 flex items-center">
+                    <div class="flex-grow h-px bg-borderColor"></div>
+                    <span class="px-4 text-sm text-textLight">or continue with</span>
+                    <div class="flex-grow h-px bg-borderColor"></div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                    <button
+                        class="flex items-center justify-center gap-2 py-2 px-4 border border-borderColor rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fab fa-google text-textDark"></i>
+                        <span class="text-sm font-medium text-textDark">Google</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-textDark text-white pt-16 pb-4">
+        <div class="max-w-6xl mx-auto px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="mb-8">
+                <a href="/" class="flex items-center gap-2 text-2xl font-bold text-white mb-4">
+                    <i class="fas fa-chart-line"></i>
+                    <span>StockMaster</span>
+                </a>
+                <p class="text-slate-300 mb-6">Your AI-powered trading companion for smarter investment decisions.</p>
+                <div class="flex gap-4">
+                    <a href="#"
+                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 text-white hover:bg-primary hover:-translate-y-1 transition-all"><i
+                            class="fab fa-twitter"></i></a>
+                    <a href="#"
+                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 text-white hover:bg-primary hover:-translate-y-1 transition-all"><i
+                            class="fab fa-linkedin"></i></a>
+                    <a href="#"
+                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 text-white hover:bg-primary hover:-translate-y-1 transition-all"><i
+                            class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold mb-6">Quick Links</h4>
+                <ul class="space-y-3">
+                    <li><a href="/#features" class="text-slate-300 hover:text-white transition-colors">Features</a></li>
+                    <li><a href="/#pricing" class="text-slate-300 hover:text-white transition-colors">Pricing</a></li>
+                    <li><a href="/#about" class="text-slate-300 hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="/#contact" class="text-slate-300 hover:text-white transition-colors">Contact</a></li>
+                </ul>
+            </div>
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold mb-6">Legal</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors">Terms of Service</a></li>
+                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors">Cookie Policy</a></li>
+                </ul>
+            </div>
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold mb-6">Newsletter</h4>
+                <p class="text-slate-300 mb-4">Subscribe for market insights and updates.</p>
+                <form class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" name="email" placeholder="Enter your email"
+                        class="flex-1 px-4 py-3 rounded-lg border-none text-textDark">
+                    <button type="submit"
+                        class="px-4 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-colors">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-8 pt-6 mt-8 border-t border-white/10 text-center">
+            <p class="text-slate-300 text-sm">&copy; {{ current_year }} StockMaster. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Common Scripts -->
+
+    </script>
+    <script>
+        // Enhanced mobile menu toggle with animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navbar = document.getElementById('main-navbar');
+            let lastScrollTop = 0;
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function () {
+                    mobileMenu.classList.toggle('hidden');
+
+                    // Add animation when showing
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.remove('opacity-0', '-translate-y-2');
+                        mobileMenu.classList.add('opacity-100', 'translate-y-0');
+                        mobileMenuButton.innerHTML = '<i class="fas fa-times"></i>';
+                    } else {
+                        mobileMenu.classList.add('opacity-0', '-translate-y-2');
+                        mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+                        mobileMenuButton.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            }
+
+            // Hide navbar on scroll down, show on scroll up
+            window.addEventListener('scroll', function () {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling down & not at the top
+                    navbar.classList.add('-translate-y-full');
+                } else {
+                    // Scrolling up or at the top
+                    navbar.classList.remove('-translate-y-full');
+                }
+
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            });
+
+            // Toggle password visibility
+            document.querySelectorAll('.toggle-password').forEach(icon => {
+                icon.addEventListener('click', function () {
+                    const passwordInput = this.previousElementSibling;
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+
+            // Check URL parameters to show modals
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Show login modal if parameter exists
+            if (urlParams.get('show_login') === 'true') {
+                openModal('loginModal');
+            }
+
+            // Show signup modal if parameter exists
+            if (urlParams.get('show_signup') === 'true') {
+                openModal('signupModal');
+            }
+
+            // Show login error if exists
+            const loginError = urlParams.get('login_error');
+            if (loginError) {
+                openModal('loginModal');
+                document.getElementById('login-error').textContent = decodeURIComponent(loginError);
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+
+            // Show signup error if exists
+            const signupError = urlParams.get('signup_error');
+            if (signupError) {
+                openModal('signupModal');
+                document.getElementById('signup-error').textContent = decodeURIComponent(signupError);
+                document.getElementById('signup-error').classList.remove('hidden');
+            }
+
+            // Show registration success message
+            if (urlParams.get('registered') === 'true') {
+                openModal('loginModal');
+                document.getElementById('login-success').textContent = 'Registration successful! Please log in.';
+                document.getElementById('login-success').classList.remove('hidden');
+            }
+        });
+
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto'; // Enable scrolling
+        }
+
+        function switchModal(currentModalId, newModalId) {
+            closeModal(currentModalId);
+            setTimeout(() => openModal(newModalId), 100); // Small delay for better UX
+        }
+
+        // Toggle password visibility for specific input
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Find and toggle the eye icon
+            const eyeIcon = passwordInput.nextElementSibling;
+            if (eyeIcon) {
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            }
+        }
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+
+            if (loginModal && loginModal.contains(event.target) && !document.querySelector('#loginModal .modal-content').contains(event.target)) {
+                closeModal('loginModal');
+            }
+            if (signupModal && signupModal.contains(event.target) && !document.querySelector('#signupModal .modal-content').contains(event.target)) {
+                closeModal('signupModal');
+            }
+        };
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal('loginModal');
+                closeModal('signupModal');
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const signupForm = document.querySelector("form[action='/signup']");
+            const passwordInput = document.getElementById("signup-password");
+            const confirmPasswordInput = document.getElementById("signup-confirm-password");
+            const errorMessage = document.getElementById("signup-error");
+
+            signupForm.addEventListener("submit", function (event) {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    event.preventDefault(); // Prevent form submission
+                    errorMessage.textContent = "Passwords do not match!";
+                    errorMessage.classList.remove("hidden");
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".toggle-password").forEach(function (toggleIcon) {
+                toggleIcon.addEventListener("click", function () {
+                    const passwordInput = this.previousElementSibling; // Get the corresponding input field
+
+                    if (passwordInput.type === "password") {
+                        passwordInput.type = "text";
+                        this.classList.remove("fa-eye");
+                        this.classList.add("fa-eye-slash");
+                    } else {
+                        passwordInput.type = "password";
+                        this.classList.remove("fa-eye-slash");
+                        this.classList.add("fa-eye");
+                    }
+                });
+            });
+        });
+
+
+
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+sqlalchemy
+psycopg2-binary
+python-jose[cryptography]  
+passlib[bcrypt]           
+httpx==0.25.0
+python-dotenv==1.0.0
+websockets==11.0.3
+yfinance>=0.2.31
+pandas>=2.0.0
+scikit-learn
+tensorflow
+joblib
+
