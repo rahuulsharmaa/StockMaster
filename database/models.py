@@ -19,20 +19,21 @@ class User(Base):
 
 class Profile(Base):
     __tablename__ = "profiles"
-
+    
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     phone = Column(String, nullable=True)
     address = Column(String, nullable=True)
     city = Column(String, nullable=True)
     state = Column(String, nullable=True)
-    zip_code = Column(String, nullable=True)
+    zip_code = Column(Integer, nullable=True)
     country = Column(String, nullable=True)
     time_zone = Column(String, nullable=True)
     bio = Column(String, nullable=True)
     subscription_status = Column(String, default="Free")  # Example: Free, Premium
     last_login = Column(String, nullable=True)
-
+    profile_image = Column(String, nullable=True)  # Store the image path
+    
     # Relationship to User
     user = relationship("User", back_populates="profile")
 class StockSearch(Base):
@@ -78,74 +79,3 @@ class StockPrediction(Base):
     created_at = Column(DateTime, default=datetime.now)
     def __repr__(self):
         return f"<StockPrediction(symbol='{self.symbol}', direction='{self.direction}')>"
-# class Course(Base):
-#     __tablename__ = "courses"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String, nullable=False)
-#     description = Column(String, nullable=False)
-#     level = Column(String, nullable=False)  # Beginner, Intermediate, Advanced
-#     thumbnail = Column(String, nullable=True)
-#     total_modules = Column(Integer, nullable=False)
-#     duration_minutes = Column(Integer, nullable=False)
-#     is_featured = Column(Boolean, default=False)
-#     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
-#     # Relationships
-#     modules = relationship("Module", back_populates="course")
-#     enrollments = relationship("UserCourseProgress", back_populates="course")
-
-# class Module(Base):
-#     __tablename__ = "modules"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
-#     title = Column(String, nullable=False)
-#     description = Column(String, nullable=True)
-#     order_index = Column(Integer, nullable=False)  # For ordering modules within a course
-#     duration_minutes = Column(Integer, nullable=False)
-#     content_url = Column(String, nullable=True)  # URL or path to content
-    
-#     # Relationships
-#     course = relationship("Course", back_populates="modules")
-#     user_progress = relationship("UserModuleProgress", back_populates="module")
-
-# class UserCourseProgress(Base):
-#     __tablename__ = "user_course_progress"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-#     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
-#     enrollment_date = Column(DateTime(timezone=True), server_default=func.now())
-#     last_accessed = Column(DateTime(timezone=True), server_default=func.now())
-#     completed = Column(Boolean, default=False)
-#     completion_date = Column(DateTime(timezone=True), nullable=True)
-    
-#     # Relationships
-#     user = relationship("User")
-#     course = relationship("Course", back_populates="enrollments")
-#     module_progress = relationship("UserModuleProgress", back_populates="course_progress")
-
-# class UserModuleProgress(Base):
-#     __tablename__ = "user_module_progress"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     user_course_progress_id = Column(Integer, ForeignKey("user_course_progress.id"), nullable=False)
-#     module_id = Column(Integer, ForeignKey("modules.id"), nullable=False)
-#     completed = Column(Boolean, default=False)
-#     completion_date = Column(DateTime(timezone=True), nullable=True)
-    
-#     # Relationships
-#     course_progress = relationship("UserCourseProgress", back_populates="module_progress")
-#     module = relationship("Module", back_populates="user_progress")
-
-# class LearningStreak(Base):
-#     __tablename__ = "learning_streaks"
-    
-#     id = Column(Integer, primary_key=True, index=True)
-#     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-#     streak_count = Column(Integer, default=0)
-#     last_activity_date = Column(DateTime(timezone=True), server_default=func.now())
-    
-#     # Relationship
-#     user = relationship("User")

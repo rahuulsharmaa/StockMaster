@@ -39,7 +39,7 @@ async def login(
     access_token = create_access_token(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
-    
+     
     # Set cookie with token
     response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(
@@ -72,15 +72,7 @@ async def signup(
     name_parts = name.split(maxsplit=1)
     firstName = name_parts[0]
     lastName = name_parts[1] if len(name_parts) > 1 else ""
-    # Validate data
-    # if password != confirmPassword:
-    #     return templates.TemplateResponse(
-    #         "signup.html", 
-    #         {
-    #             "request": request,
-    #             "error": "Passwords do not match"
-    #         }
-    #     )
+
     
     # Check if user already exists
     existing_user = get_user_by_email(db, email)

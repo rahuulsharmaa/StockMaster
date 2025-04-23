@@ -41,17 +41,6 @@ def protected_page(template_name: str):
         )
     return endpoint
 
-# @router.get("/", response_class=HTMLResponse)
-# async def index(request: Request, db: Session = Depends(get_db)):
-#     user = await get_current_user_from_cookie(request, db)
-#     return templates.TemplateResponse(
-#         "index.html",
-#         {
-#             "request": request,
-#             "current_year": datetime.now().year,
-#             "user": user
-#         }
-#     )
 @router.get("/", response_class=HTMLResponse)
 async def index(
     request: Request, 
@@ -72,30 +61,13 @@ async def index(
             "registered": registered
         }
     )
-# @router.get("/login", response_class=HTMLResponse)
-# async def login_page(request: Request, registered: Optional[bool] = False):
-#     return templates.TemplateResponse(
-#         "login.html",
-#         {
-#             "request": request,
-#             "current_year": datetime.now().year,
-#             "registered": registered    
-#         }
-#     )
+
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
     # Just redirect to home with modal parameter
     return RedirectResponse(url="/?show_login=true")
 
-# @router.get("/signup", response_class=HTMLResponse)
-# async def signup_page(request: Request):
-#     return templates.TemplateResponse(
-#         "signup.html",
-#         {
-#             "request": request,
-#             "current_year": datetime.now().year
-#         }
-#     )
+
 @router.get("/signup", response_class=HTMLResponse)
 async def signup_page(request: Request):
     # Just redirect to home with modal parameter
@@ -123,7 +95,6 @@ def protected_page(template_name: str):
             recent_searches = db.query(StockSearch)\
                 .filter(StockSearch.user_id == user.id)\
                 .order_by(StockSearch.created_at.desc())\
-                .limit(10)\
                 .all()
                 
             return templates.TemplateResponse(

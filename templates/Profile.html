@@ -58,6 +58,7 @@
         width: 120px;
         height: 120px;
         border-radius: 50%;
+        object-fit: cover;
         background-color: #e9ecef;
         display: flex;
         align-items: center;
@@ -67,6 +68,30 @@
         margin: 0 auto 15px;
     }
 
+    .profile-image-container {
+        position: relative;
+        width: 120px;
+        margin: 0 auto 15px;
+    }
+
+    .profile-image-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #profile-image-upload {
+        display: none;
+    }
     .nav-pills .nav-link.active {
         background-color: #2563eb;
     }
@@ -182,12 +207,18 @@
                 <div class="card-body">
                   <div class="row align-items-center">
                     <div class="col-md-2 text-center">
-                      <div class="rounded-circle bg-light d-flex justify-content-center align-items-center mx-auto" style="width: 100px; height: 100px;">
-                        <i class="fas fa-user fa-3x text-secondary"></i>
+                      <div class="profile-image-container">
+                        {% if profile.profile_image %}
+                        <img src="/profile-image/{{ user.id }}" class="rounded-circle profile-picture" alt="Profile Picture">
+                        {% else %}
+                        <div class="rounded-circle bg-light d-flex justify-content-center align-items-center profile-picture">
+                          <i class="fas fa-user fa-3x text-secondary"></i>
+                        </div>
+                        {% endif %}
+                        <div class="profile-image-overlay" onclick="document.getElementById('profile-image-upload').click()">
+                          <i class="fas fa-camera"></i>
+                        </div>
                       </div>
-                      <button class="btn btn-sm btn-outline-primary mt-2">
-                        <i class="fas fa-camera"></i> Change
-                      </button>
                     </div>
                     <div class="col-md-6">
                       <h3 class="mb-2">{{ user.first_name }} {{ user.last_name }}</h3>
@@ -195,7 +226,7 @@
                         <i class="fas fa-envelope me-2"></i> {{ user.email }}
                       </p>
                       <p class="text-muted mb-1">
-                        <i class="fas fa-map-marker-alt me-2"></i> {{ profile.city if profile.city else "" }}, {{ profile.country if profile.country else "" }}
+                        <i class="fas fa-map-marker-alt me-2"></i> {{ profile.city if profile.city else "" }}, {{ profile.state if profile.state else "" }}
                       </p>
                       <p class="mb-0">
                         <span class="badge bg-primary text-white">
@@ -210,7 +241,6 @@
                   </div>
                 </div>
               </div>
-          
               <!-- Profile Navigation Tabs -->
               <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -244,7 +274,10 @@
                       <h5 class="card-title mb-0 py-2">Personal Information</h5>
                     </div>
                     <div class="card-body">
-                      <form id="profile-form" action="/profile/update" method="POST">
+                      <form id="profile-form" action="/profile/update" method="POST" enctype="multipart/form-data">
+                        <!-- Hidden file input for profile image -->
+                        <input type="file" id="profile-image-upload" name="profile_image" accept="image/*" class="d-none">
+                        
                         <div class="row g-3 mb-3">
                           <div class="col-md-6">
                             <label for="firstName" class="form-label fw-bold">First Name <span class="text-danger">*</span></label>
@@ -291,7 +324,7 @@
                           </div>
                           <div class="col-md-4">
                             <label for="zip" class="form-label fw-bold">ZIP Code</label>
-                            <input type="text" class="form-control" id="zip" name="zip" value="{{ profile.zip if profile.zip else '' }}">
+                            <input type="text" class="form-control" id="zip" name="zip_code" value="{{ profile.zip_code if profile.zip_code else '' }}">
                           </div>
                         </div>
                         <div class="row g-3 mb-3">
@@ -307,12 +340,12 @@
                           </div>
                           <div class="col-md-6">
                             <label for="timezone" class="form-label fw-bold">Timezone</label>
-                            <select class="form-select" id="timezone" name="timezone">
-                              <option value="UTC" {% if profile.timezone=='UTC' %}selected{% endif %}>UTC</option>
-                              <option value="EST" {% if profile.timezone=='EST' %}selected{% endif %}>Eastern Time (EST)</option>
-                              <option value="CST" {% if profile.timezone=='CST' %}selected{% endif %}>Central Time (CST)</option>
-                              <option value="MST" {% if profile.timezone=='MST' %}selected{% endif %}>Mountain Time (MST)</option>
-                              <option value="PST" {% if profile.timezone=='PST' %}selected{% endif %}>Pacific Time (PST)</option>
+                            <select class="form-select" id="timezone" name="time_zone">
+                              <option value="UTC" {% if profile.time_zone=='UTC' %}selected{% endif %}>UTC</option>
+                              <option value="EST" {% if profile.time_zone=='EST' %}selected{% endif %}>Eastern Time (EST)</option>
+                              <option value="CST" {% if profile.time_zone=='CST' %}selected{% endif %}>Central Time (CST)</option>
+                              <option value="MST" {% if profile.time_zone=='MST' %}selected{% endif %}>Mountain Time (MST)</option>
+                              <option value="PST" {% if profile.time_zone=='PST' %}selected{% endif %}>Pacific Time (PST)</option>
                             </select>
                           </div>
                         </div>
@@ -322,7 +355,6 @@
                             <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us a little about yourself...">{{ profile.bio if profile.bio else '' }}</textarea>
                           </div>
                         </div>
-                        
                       </form>
                     </div>
                   </div>
@@ -497,7 +529,7 @@
                                         your account by requiring both your password and a verification code from your
                                         mobile device.</p>
                                     <div class="text-center mb-3">
-                                        <img src="/api/placeholder/150/150" alt="QR Code" class="img-thumbnail">
+                                        <img src="https://via.placeholder.com/150" alt="QR Code" class="img-thumbnail">
                                     </div>
                                     <p class="text-center text-muted">Scan this QR code with your authenticator app</p>
                                     <div class="d-grid">
@@ -755,5 +787,89 @@
             });
         });
     });
+
+// Update the profile image upload event listener
+document.addEventListener('DOMContentLoaded', function () {
+    // Profile image upload handling
+    const profileImageUpload = document.getElementById('profile-image-upload');
+    if (profileImageUpload) {
+        profileImageUpload.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Find profile picture container
+                    const container = document.querySelector('.profile-image-container');
+                    
+                    // Find existing profile picture element
+                    let profilePic = container.querySelector('.profile-picture');
+                    
+                    // If it's a div (default icon), remove it and create an image
+                    if (profilePic && profilePic.tagName === 'DIV') {
+                        container.removeChild(profilePic);
+                        profilePic = document.createElement('img');
+                        profilePic.classList.add('rounded-circle', 'profile-picture');
+                        profilePic.alt = 'Profile Picture';
+                        container.insertBefore(profilePic, container.firstChild);
+                    }
+                    
+                    // If it's already an image, just update the src
+                    if (profilePic && profilePic.tagName === 'IMG') {
+                        profilePic.src = e.target.result;
+                    }
+                }
+                
+                reader.readAsDataURL(this.files[0]);
+                
+                // Submit the form automatically to upload the image to server
+                // Uncomment this when your backend route is ready:
+                // const formData = new FormData();
+                // formData.append('profile_image', this.files[0]);
+                // fetch('/profile/upload-image', {
+                //     method: 'POST',
+                //     body: formData
+                // })
+                // .then(response => response.json())
+                // .then(data => console.log('Success:', data))
+                // .catch(error => console.error('Error:', error));
+            }
+        });
+    }
+    
+    // Rest of your existing DOMContentLoaded code...
+});
+
+const profileForm = document.getElementById('profile-form');
+if (profileForm) {
+    profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Create FormData object to send the entire form, including files
+        const formData = new FormData(this);
+        
+        // Send form data to the server
+        fetch('/profile/update', {
+            method: 'POST',
+            body: formData
+            // No need to set Content-Type header, it's automatically set with boundary for multipart/form-data
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Show success message
+            alert('Profile updated successfully!');
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            // Show error message
+            alert('Error updating profile. Please try again.');
+            console.error('Error:', error);
+        });
+    });
+}
 </script>
 {% endblock %}

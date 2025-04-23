@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request, Depends
+from fastapi import APIRouter, HTTPException, Request, Depends,status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from typing import Optional
@@ -32,9 +32,14 @@ async def get_analytics_page(request: Request, db: Session = Depends(get_db)):
     """Render the analytics page."""
     user = await get_current_user_from_cookie(request, db)
     if not user:
-        return RedirectResponse(url="/login")
+        response = RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+        # Add cache control headers to prevent back button access
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
     
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         "analytics.html", 
         {
             "request": request,
@@ -42,6 +47,13 @@ async def get_analytics_page(request: Request, db: Session = Depends(get_db)):
             "user": user
         }
     )
+    
+    # Add cache control headers to protect this page too
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    
+    return response
 
 @router.get("/api/stock/{symbol}")
 async def get_stock_info(

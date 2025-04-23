@@ -156,10 +156,18 @@
                     <li class="flex items-start gap-3 mb-4"><i class="fas fa-check text-success mt-1"></i> 5 custom
                         alerts</li>
                 </ul>
+                {% if not user %}
                 <a href="/signup?plan=basic"
-                    class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
-                    Start Basic Trial
+                   class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                   Start Basic Trial
                 </a>
+                {% else %}
+                <button onclick="showToast()"
+                   class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                   Start Basic Trial
+                </button>
+                {% endif %}
+                
             </div>
             <div
                 class="p-10 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 flex flex-col border-2 border-primary relative md:transform md:scale-105">
@@ -179,10 +187,18 @@
                     <li class="flex items-start gap-3 mb-4"><i class="fas fa-check text-success mt-1"></i> Advanced
                         analytics</li>
                 </ul>
+                {% if not user %}
                 <a href="/signup?plan=pro"
-                    class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
-                    Start Pro Trial
+                class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                Start Pro Trial
                 </a>
+                {% else %}
+                <button onclick="showToast()"
+                class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                Start Pro Trial
+                </button>
+                {% endif %}
+
             </div>
             <div
                 class="p-10 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 flex flex-col">
@@ -199,14 +215,27 @@
                     <li class="flex items-start gap-3 mb-4"><i class="fas fa-check text-success mt-1"></i> API access
                     </li>
                 </ul>
+                {% if not user %}
                 <a href="/signup?plan=enterprise"
-                    class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
-                    Contact Sales
+                   class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                   Contact Sales
+                </a>
+                {% else %}
+                <button onclick="showToast()"
+                   class="text-center px-6 py-3 rounded-lg font-semibold text-white bg-primary hover:bg-primaryDark transition-all transform hover:-translate-y-1">
+                   Contact Sales
+                </button>
+                {% endif %}
+                
                 </a>
             </div>
         </div>
     </div>
 </section>
+<div id="toast" class="fixed bottom-5 right-5 bg-yellow-200 text-yellow-900 px-6 py-4 rounded-lg shadow-lg hidden">
+    🚧 This feature is under development.
+    Enjoy the Free Trial of StockMaster! 🚧
+</div>
 
 <!-- Contact Section -->
 <section id="contact" class="py-24 bg-gradient-to-b from-white to-gray-50">
@@ -472,5 +501,14 @@
             }
         });
     });
+
+        function showToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.remove("hidden");
+
+        setTimeout(() => {
+            toast.classList.add("hidden");
+        }, 3000); // hides after 3 seconds
+    }
 </script>
 {% endblock %}
